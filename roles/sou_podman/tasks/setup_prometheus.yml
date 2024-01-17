@@ -1,0 +1,47 @@
+---
+- name: Add Prometheus group
+  ansible.builtin.group:
+    name: "{{ prometheus_group }}"
+    state: present
+
+- name: Add Prometheus user
+  ansible.builtin.user:
+    name: "{{ prometheus_user }}"
+    groups: "{{ prometheus_group }}"
+
+- name: Create Prometheus config dir
+  ansible.builtin.file:
+    path: "{{ containers_volumes }}/prometheus/config"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: '0755'
+
+- name: Create Prometheus data dir
+  ansible.builtin.file:
+    path: "{{ containers_volumes }}/prometheus/data"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: '0755'
+
+- name: Copy Prometheus config
+  ansible.builtin.template:
+    src: prometheus.yml.j2
+    dest: "{{ containers_volumes }}/prometheus/config/prometheus.yml"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    mode: '0755'
+
+- name: Create Prometheus container
+  containers.podman.podman_container:
+    name: prometheus
+    image: "prom/prometheus:{{ prometheus_image_tag }}"
+    volume:
+      - "{{ containers_volumes }}/prometheus/data/:/etc/prometheus/"
+      - "{{ containers_volumes }}/prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml"
+    expose:
+      - 9090
+    ports:
+      - "9090:9090"
+  become: true

@@ -1,0 +1,43 @@
+---
+- name: Add Grafana group
+  ansible.builtin.group:
+    name: "{{ grafana_group }}"
+    state: present
+
+- name: Add Grafana user
+  ansible.builtin.user:
+    name: "{{ grafana_user }}"
+    groups: "{{ grafana_group }}"
+
+- name: Create Grafana config dir
+  ansible.builtin.file:
+    path: "{{ containers_volumes }}/grafana/config"
+    state: directory
+    owner: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+    mode: '0755'
+
+- name: Create Grafana data dir
+  ansible.builtin.file:
+    path: "{{ containers_volumes }}/grafana/data"
+    state: directory
+    owner: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+    mode: '0755'
+
+- name: Copy Grafana config
+  ansible.builtin.template:
+    src: grafana.ini.j2
+    dest: "{{ containers_volumes }}/grafana/config/grafana.ini"
+ 
+- name: Create Grafana container
+  containers.podman.podman_container:
+    name: grafana
+    image: "grafana/grafana:{{ grafana_image_tag }}"
+    volume:
+      - "{{ containers_volumes }}/grafana/config/grafana.ini:/etc/grafana/grafana.ini:z"
+      - "{{ containers_volumes }}/grafana/data/:/grafana/:z"
+    expose:
+      - 3000
+    ports:
+      - "3000:3000"

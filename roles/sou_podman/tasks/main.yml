@@ -1,0 +1,16 @@
+---
+- name: Create containers volume's directory
+  ansible.builtin.file:
+    path: "{{ containers_volumes }}"
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: Setup Prometheus
+  include_tasks: setup_prometheus.yml
+
+- name: Setup Grafana
+  include_tasks: setup_grafana.yml
+
+- name: Setup HAProxy
+  include_tasks: setup_haproxy.yml

@@ -1,0 +1,14 @@
+---
+containers_volumes: /Users
+
+haproxy_user: haproxy
+haproxy_group: haproxy
+haproxy_imgage_tag: latest
+
+prometheus_user: prometheus
+prometheus_group: prometheus
+prometheus_image_tag: latest
+
+grafana_user: grafana
+grafana_group: grafana
+grafana_image_tag: latest

@@ -1,0 +1,44 @@
+---
+- name: Add HAProxy group
+  ansible.builtin.group:
+    name: "{{ haproxy_group }}"
+    state: present
+
+- name: Add HAProxy user
+  ansible.builtin.user:
+    name: "{{ haproxy_user }}"
+    groups: "{{ haproxy_group }}"
+
+- name: Create HAProxy config dir
+  ansible.builtin.file:
+    path: "{{ containers_volumes }}/haproxy/config"
+    state: directory
+    owner: "{{ haproxy_user }}"
+    group: "{{ haproxy_group }}"
+    mode: '0755'
+
+# HTTPS
+- name: Create self-signed certificate
+  community.crypto.x509_certificate:
+    path: "{{ containers_volumes }}/haproxy/foo.pem"
+    privatekey_path: "{{ containers_volumes }}/haproxy/foo.key"
+    provider: selfsigned
+
+- name: Copy HAProxy config
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: "{{ containers_volumes }}/haproxy/config/haproxy.cfg"
+
+- name: Create HAProxy container
+  containers.podman.podman_container:
+    name: haproxy
+    image: "haproxytech/haproxy-alpine:{{ haproxy_image_tag }}"
+    volume:
+      - "{{ containers_volumes }}/haproxy/config/haproxy.cfg:/etc/haproxy/haproxy.cfg:z"
+      - "{{ containers_volumes }}/haproxy/foo.pem:/etc/haproxy/certs/foo.pem:ro"
+    expose:
+      - 80
+      - 443
+    ports:
+      - "80:80"
+      - "443:443"

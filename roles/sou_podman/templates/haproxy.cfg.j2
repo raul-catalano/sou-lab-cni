@@ -1,0 +1,34 @@
+# {{ ansible_managed }}
+global
+    maxconn 20000
+    ulimit-n  16384
+    log 127.0.0.1 local0
+    daemon
+ 
+frontend fe_https
+    bind *:8443 ssl crt /etc/haproxy/certs/foo.pem
+    mode http
+    log global
+    option httplog
+    option dontlognull
+    option nolinger
+    maxconn 8000
+    timeout client 30s
+ 
+    acl is_grafana hdr(host) -i foobar.local
+    use_backend grafana if is_grafana
+ 
+    acl is_prometheus hdr(host) -i foo.local
+    use_backend prometheus if is_prometheus
+ 
+backend grafana
+    mode http
+    balance roundrobin
+    option httpchk
+    server grafana1 127.0.0.1:3000 check
+ 
+backend prometheus
+    mode http
+    balance roundrobin
+    option httpchk
+    server prometheus1 127.0.0.1:9090 check
