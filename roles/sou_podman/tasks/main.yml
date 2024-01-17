@@ -4,7 +4,6 @@
     path: "{{ containers_volumes }}"
     state: directory
     mode: '0755'
-  become: true
 
 - name: Setup Prometheus
   include_tasks: setup_prometheus.yml
