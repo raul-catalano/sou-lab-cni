@@ -39,7 +39,7 @@
     image: "prom/prometheus:{{ prometheus_image_tag }}"
     volume:
       - "{{ containers_volumes }}/prometheus/data/:/etc/prometheus/:z"
-      - "{{ containers_volumes }}/prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:Z"
+      - "{{ containers_volumes }}/prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:z"
     expose:
       - 9090
     ports:
