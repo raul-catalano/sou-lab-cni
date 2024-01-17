@@ -5,4 +5,4 @@
   gather_facts: yes
   become: yes
   roles:
-    - roles/sou_podman
+    - roles/sou_docker

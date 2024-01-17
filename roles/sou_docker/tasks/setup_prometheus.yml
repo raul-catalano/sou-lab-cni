@@ -25,23 +25,22 @@
     group: "{{ prometheus_group }}"
     mode: '0755'
 
-- name: Copy Prometheus config
+- name: Copy Prometheus config file
   ansible.builtin.template:
     src: prometheus.yml.j2
     dest: "{{ containers_volumes }}/prometheus/config/prometheus.yml"
     owner: "{{ prometheus_user }}"
     group: "{{ prometheus_group }}"
-    mode: '0755'
+    mode: '0644'
 
 - name: Create Prometheus container
-  containers.podman.podman_container:
+  community.docker.docker_container:
     name: prometheus
     image: "prom/prometheus:{{ prometheus_image_tag }}"
-    volume:
-      - "{{ containers_volumes }}/prometheus/data/:/etc/prometheus/:z"
-      - "{{ containers_volumes }}/prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:z"
+    volumes:
+      - "{{ containers_volumes }}/prometheus/config/:/etc/prometheus/"
+      - "{{ containers_volumes }}/prometheus/data/:/var/lib/prometheus/"
     expose:
       - 9090
     ports:
       - "9090:9090"
-  become: true

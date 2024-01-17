@@ -25,18 +25,21 @@
     group: "{{ grafana_group }}"
     mode: '0755'
 
-- name: Copy Grafana config
+- name: Copy Grafana config file
   ansible.builtin.template:
     src: grafana.ini.j2
     dest: "{{ containers_volumes }}/grafana/config/grafana.ini"
+    owner: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+    mode: '0644'
  
 - name: Create Grafana container
-  containers.podman.podman_container:
+  community.docker.docker_container:
     name: grafana
     image: "grafana/grafana:{{ grafana_image_tag }}"
-    volume:
-      - "{{ containers_volumes }}/grafana/config/grafana.ini:/etc/grafana/grafana.ini:z"
-      - "{{ containers_volumes }}/grafana/data/:/grafana/:z"
+    volumes:
+      - "{{ containers_volumes }}/grafana/config/:/etc/grafana/"
+      - "{{ containers_volumes }}/grafana/data/:/grafana/"
     expose:
       - 3000
     ports:

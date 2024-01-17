@@ -52,6 +52,6 @@ dependencies: []
   # if you add dependencies to this list.
 
 collections:
-  - containers.podman
+  - containers.docker
   - community.crypto
   - community.general

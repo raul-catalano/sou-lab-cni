@@ -1,9 +1,9 @@
 ---
-containers_volumes: /Users
+containers_volumes: /tmp
 
 haproxy_user: haproxy
 haproxy_group: haproxy
-haproxy_imgage_tag: latest
+haproxy_image_tag: latest
 
 prometheus_user: prometheus
 prometheus_group: prometheus

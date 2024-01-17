@@ -17,25 +17,30 @@
     group: "{{ haproxy_group }}"
     mode: '0755'
 
-# HTTPS
-- name: Create self-signed certificate
-  community.crypto.x509_certificate:
-    path: "{{ containers_volumes }}/haproxy/foo.pem"
-    privatekey_path: "{{ containers_volumes }}/haproxy/foo.key"
-    provider: selfsigned
+- name: Create HAProxy certs dir
+  ansible.builtin.file:
+    path: "{{ containers_volumes }}/haproxy/certs"
+    state: directory
+    owner: "{{ haproxy_user }}"
+    group: "{{ haproxy_group }}"
+    mode: '0755'
 
-- name: Copy HAProxy config
+# Created with mkcerts (WIP)
+- name: Copy HAProxy config file
   ansible.builtin.template:
     src: haproxy.cfg.j2
     dest: "{{ containers_volumes }}/haproxy/config/haproxy.cfg"
+    owner: "{{ haproxy_user }}"
+    group: "{{ haproxy_group }}"
+    mode: '0644'
 
 - name: Create HAProxy container
-  containers.podman.podman_container:
+  community.docker.docker_container:
     name: haproxy
     image: "haproxytech/haproxy-alpine:{{ haproxy_image_tag }}"
-    volume:
-      - "{{ containers_volumes }}/haproxy/config/haproxy.cfg:/etc/haproxy/haproxy.cfg:z"
-      - "{{ containers_volumes }}/haproxy/foo.pem:/etc/haproxy/certs/foo.pem:ro"
+    volumes:
+      - "{{ containers_volumes }}/haproxy/config/:/etc/haproxy/"
+      - "{{ containers_volumes }}/haproxy/certs/:/haproxy/certs/:ro"
     expose:
       - 80
       - 443

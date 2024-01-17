@@ -1,7 +1,7 @@
-Role Name: sou_podman
+Role Name: sou_docker
 =========
 
-Install HaProxy, Prometheus and Grafana in containerized environment (Podman). 
+Install HaProxy, Prometheus and Grafana in containerized environment (docker). 
 HaProxy will operate as a Reverse proxy for Prometheus and Grafana.
 
 Role Variables
