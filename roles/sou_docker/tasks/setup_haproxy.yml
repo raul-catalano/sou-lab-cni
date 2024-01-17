@@ -25,7 +25,6 @@
     group: "{{ haproxy_group }}"
     mode: '0755'
 
-# Created with mkcerts (WIP)
 - name: Copy HAProxy config file
   ansible.builtin.template:
     src: haproxy.cfg.j2
