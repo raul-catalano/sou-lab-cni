@@ -25,10 +25,10 @@ backend grafana
     mode http
     balance roundrobin
     option httpchk
-    server grafana1 127.0.0.1:3000 check
+    server grafana1 {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:3000 check
  
 backend prometheus
     mode http
     balance roundrobin
     option httpchk
-    server prometheus1 127.0.0.1:9090 check
+    server prometheus1 {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:9090 check
