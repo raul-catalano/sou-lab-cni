@@ -1,11 +1,11 @@
-# sou-lab-cni (WIP)
+# sou-lab-cni (macOS m2)
 
 Deploy HAProxy, Prometheus and Grafana in containerized environment (docker).
 HaProxy will operate as reverse proxy and SSL termination for Prometheus and Grafana.
 
 ## Requirements
 
-- Docker
+- Docker Desktop
 - Ansible
 
 ## Installation
