@@ -1,0 +1,35 @@
+---
+- name: Inastall mkcert
+  community.general.homebrew:
+    name: mkcert
+    state: present
+  become: false
+
+- name: Create certs dir
+  ansible.builtin.file:
+    path: "{{ certificates_directory }}"
+    state: directory
+    mode: '0755'
+
+- name: Install development CA
+  ansible.builtin.command: "mkcert -install"
+  args:
+    chdir: "{{ certificates_directory }}"
+
+- name: Generating cert and private-key
+  ansible.builtin.command: "mkcert localhost"
+  args:
+    chdir: "{{ certificates_directory }}"
+
+- name: Merge cert and private-key
+  ansible.builtin.shell: "cat localhost.pem localhost-key.pem > localhost-comb.pem"
+  args:
+    chdir: "{{ certificates_directory }}"
+
+- name: Remove original cert and private-key
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ certificates_directory }}/localhost.pem"
+    - "{{ certificates_directory }}/localhost-key.pem"

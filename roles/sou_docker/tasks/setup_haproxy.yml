@@ -17,6 +17,14 @@
     group: "{{ haproxy_group }}"
     mode: '0755'
 
+- name: Copy HAProxy config file
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: "{{ containers_volumes }}/haproxy/config/haproxy.cfg"
+    owner: "{{ haproxy_user }}"
+    group: "{{ haproxy_group }}"
+    mode: '0644'
+
 - name: Create HAProxy certs dir
   ansible.builtin.file:
     path: "{{ containers_volumes }}/haproxy/certs"
@@ -25,13 +33,14 @@
     group: "{{ haproxy_group }}"
     mode: '0755'
 
-- name: Copy HAProxy config file
-  ansible.builtin.template:
-    src: haproxy.cfg.j2
-    dest: "{{ containers_volumes }}/haproxy/config/haproxy.cfg"
+- name: Copy PEM file to HAProxy certs dir
+  ansible.builtin.copy:
+    src: "{{ certificates_directory }}/localhost-comb.pem"
+    dest: "{{ containers_volumes }}/haproxy/certs"
     owner: "{{ haproxy_user }}"
     group: "{{ haproxy_group }}"
     mode: '0644'
+    remote_src: true
 
 - name: Create HAProxy container
   community.docker.docker_container:
@@ -42,7 +51,7 @@
     image: "haproxytech/haproxy-alpine:{{ haproxy_image_tag }}"
     volumes:
       - "{{ containers_volumes }}/haproxy/config/:/etc/haproxy/"
-      - "{{ containers_volumes }}/haproxy/certs/:/haproxy/certs/"
+      - "{{ containers_volumes }}/haproxy/certs/:/haproxy/certs/:ro"
     expose:
       - 80
       - 443

@@ -10,10 +10,17 @@
     name: sou_network
 
 - name: Setup Prometheus
-  include_tasks: setup_prometheus.yml
+  ansible.builtin.include_tasks:
+    file: setup_prometheus.yml
 
 - name: Setup Grafana
-  include_tasks: setup_grafana.yml
+  ansible.builtin.include_tasks: 
+    file: setup_grafana.yml
+
+- name: HTTPS
+  ansible.builtin.include_tasks: 
+    file: https.yml
 
 - name: Setup HAProxy
-  include_tasks: setup_haproxy.yml
+  ansible.builtin.include_tasks: 
+    file: setup_haproxy.yml

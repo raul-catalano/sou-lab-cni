@@ -1,5 +1,6 @@
 ---
 containers_volumes: /tmp
+certificates_directory: /tmp/certs
 
 haproxy_user: haproxy
 haproxy_group: haproxy
