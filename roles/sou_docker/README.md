@@ -12,4 +12,4 @@ BSD
 Author Information
 ------------------
 
-Raul Catalano - Sourcesense S.p.A
+Raul Catalano - Sourcesense
