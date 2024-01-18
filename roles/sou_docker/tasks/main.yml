@@ -5,6 +5,10 @@
     state: directory
     mode: '0755'
 
+- name: Create docker network
+  community.docker.docker_network:
+    name: sou_network
+
 - name: Setup Prometheus
   include_tasks: setup_prometheus.yml
 

@@ -38,7 +38,7 @@
     name: haproxy
     hostname: haproxy
     networks:
-      - name: my_network
+      - name: sou_network
     image: "haproxytech/haproxy-alpine:{{ haproxy_image_tag }}"
     volumes:
       - "{{ containers_volumes }}/haproxy/config/:/etc/haproxy/"
