@@ -36,6 +36,9 @@
 - name: Create Grafana container
   community.docker.docker_container:
     name: grafana
+    hostname: grafana
+    networks:
+      - name: my_network
     image: "grafana/grafana:{{ grafana_image_tag }}"
     volumes:
       - "{{ containers_volumes }}/grafana/config/:/etc/grafana/"

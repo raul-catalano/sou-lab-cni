@@ -36,6 +36,9 @@
 - name: Create Prometheus container
   community.docker.docker_container:
     name: prometheus
+    hostname: prometheus
+    networks: 
+      - name: my_network
     image: "prom/prometheus:{{ prometheus_image_tag }}"
     volumes:
       - "{{ containers_volumes }}/prometheus/config/:/etc/prometheus/"

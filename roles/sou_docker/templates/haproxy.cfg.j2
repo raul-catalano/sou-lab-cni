@@ -1,34 +1,36 @@
 # {{ ansible_managed }}
+
 global
-    maxconn 20000
-    ulimit-n  16384
-    log 127.0.0.1 local0
-    daemon
- 
-frontend fe_https
-    bind *:8443 ssl crt /etc/haproxy/certs/foo.pem
+
+defaults
+
+resolvers docker_resolver
+    nameserver dns 127.0.0.11:53
+
+frontend sok-front-end1
+    bind *:80
+    bind :::443 ssl crt /haproxy/certs/localhost-comb.pem
+    acl https ssl_fc
+    http-request set-header X-Forwarded-Proto http  if !https
+    http-request set-header X-Forwarded-Proto https if https
     mode http
-    log global
-    option httplog
-    option dontlognull
-    option nolinger
-    maxconn 8000
-    timeout client 30s
- 
-    acl is_grafana hdr(host) -i foobar.local
-    use_backend grafana if is_grafana
- 
-    acl is_prometheus hdr(host) -i foo.local
-    use_backend prometheus if is_prometheus
- 
-backend grafana
+    default_backend sok-front-end1
+
+backend sok-front-end1
     mode http
     balance roundrobin
-    option httpchk
-    server grafana1 {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:3000 check
- 
-backend prometheus
+    server srv1 grafana:3000 check inter 10s resolvers docker_resolver resolve-prefer ipv4
+
+frontend sok-front-end2
+    bind *:80
+    bind :::443 ssl crt /haproxy/certs/localhost-comb.pem
+    acl https ssl_fc
+    http-request set-header X-Forwarded-Proto http  if !https
+    http-request set-header X-Forwarded-Proto https if https
+    mode http
+    default_backend sok-front-end2
+
+backend sok-front-end2
     mode http
     balance roundrobin
-    option httpchk
-    server prometheus1 {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:9090 check
+    server srv2 prometheus:9090 check inter 10s resolvers docker_resolver resolve-prefer ipv1
