@@ -11,20 +11,28 @@
     state: directory
     mode: '0755'
 
+- name: Check if combined cert file exists
+  ansible.builtin.stat:
+    path: "{{ certificates_directory }}/localhost-comb.pem"
+  register: cert_file_status
+
 - name: Install development CA
   ansible.builtin.command: "mkcert -install"
   args:
     chdir: "{{ certificates_directory }}"
+  when: not cert_file_status.stat.exists
 
 - name: Generating cert and private-key
   ansible.builtin.command: "mkcert localhost"
   args:
     chdir: "{{ certificates_directory }}"
+  when: not cert_file_status.stat.exists
 
 - name: Merge cert and private-key
   ansible.builtin.shell: "cat localhost.pem localhost-key.pem > localhost-comb.pem"
   args:
     chdir: "{{ certificates_directory }}"
+  when: not cert_file_status.stat.exists
 
 - name: Remove original cert and private-key
   ansible.builtin.file:
@@ -33,3 +41,4 @@
   loop:
     - "{{ certificates_directory }}/localhost.pem"
     - "{{ certificates_directory }}/localhost-key.pem"
+  when: not cert_file_status.stat.exists

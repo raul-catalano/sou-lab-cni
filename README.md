@@ -1,17 +1,16 @@
 # sou-lab-cni (WIP)
 
-Install HaProxy, Prometheus and Grafana in containerized environment (docker) on . 
+Deploy HaProxy, Prometheus and Grafana in containerized environment (docker).
 HaProxy will operate as SSL termination and reverse proxy for Prometheus and Grafana.
 
 ## Requirements
 
-- Docker Desktop
+- Docker
 - Ansible
-- mkcert
 
 ## Installation
 
-```
+``` sh
 ansible-galaxy collection install -r ./sou-lab-cni/roles/sou_docker/requirements.yml
 ansible-playbook -b -K ./sou-lab-cni/playbook.yml
 ```

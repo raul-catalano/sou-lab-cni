@@ -14,13 +14,13 @@
     file: setup_prometheus.yml
 
 - name: Setup Grafana
-  ansible.builtin.include_tasks: 
+  ansible.builtin.include_tasks:
     file: setup_grafana.yml
 
 - name: HTTPS
-  ansible.builtin.include_tasks: 
+  ansible.builtin.include_tasks:
     file: https.yml
 
 - name: Setup HAProxy
-  ansible.builtin.include_tasks: 
+  ansible.builtin.include_tasks:
     file: setup_haproxy.yml

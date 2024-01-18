@@ -32,7 +32,7 @@
     owner: "{{ grafana_user }}"
     group: "{{ grafana_group }}"
     mode: '0644'
- 
+
 - name: Create Grafana container
   community.docker.docker_container:
     name: grafana
