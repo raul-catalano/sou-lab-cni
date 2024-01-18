@@ -1,4 +1,4 @@
 ---
-  collections:
+collections:
   - community.general
   - community.docker
