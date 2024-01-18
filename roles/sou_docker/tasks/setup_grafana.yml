@@ -42,7 +42,7 @@
     image: "grafana/grafana:{{ grafana_image_tag }}"
     volumes:
       - "{{ containers_volumes }}/grafana/config/:/etc/grafana/"
-      - "{{ containers_volumes }}/grafana/data/:/grafana/"
+      - "{{ containers_volumes }}/grafana/data/:/data/grafana/"
     expose:
       - 3000
     ports:
