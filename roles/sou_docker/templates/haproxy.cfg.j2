@@ -1,6 +1,8 @@
 global
+...omissis..
 
 defaults
+...omissis..
 
 resolvers docker_resolver
     nameserver dns 127.0.0.11:53
@@ -12,7 +14,9 @@ frontend sok-front-end1
     http-request set-header X-Forwarded-Proto http  if !https
     http-request set-header X-Forwarded-Proto https if https
     mode http
-    default_backend sok-front-end1
+    acl is_grafana hdr(host) -i grafana.local
+    use_backend sok-front-end1 if is_grafana
+    default_backend sok-front-end2
 
 backend sok-front-end1
     mode http
@@ -26,7 +30,9 @@ frontend sok-front-end2
     http-request set-header X-Forwarded-Proto http  if !https
     http-request set-header X-Forwarded-Proto https if https
     mode http
-    default_backend sok-front-end2
+    acl is_prometheus hdr(host) -i prometheus.local
+    use_backend sok-front-end2 if is_prometheus
+    default_backend sok-front-end1
 
 backend sok-front-end2
     mode http
