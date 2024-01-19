@@ -8,6 +8,7 @@ resolvers docker_resolver
 frontend sok-front-end1
     bind *:80
     bind :::443 ssl crt /haproxy/certs/localhost-comb.pem
+    redirect scheme https code 301 if !{ ssl_fc }
     acl https ssl_fc
     http-request set-header X-Forwarded-Proto http  if !https
     http-request set-header X-Forwarded-Proto https if https
@@ -24,6 +25,7 @@ backend sok-front-end1
 frontend sok-front-end2
     bind *:80
     bind :::443 ssl crt /haproxy/certs/localhost-comb.pem
+    redirect scheme https code 301 if !{ ssl_fc }
     acl https ssl_fc
     http-request set-header X-Forwarded-Proto http  if !https
     http-request set-header X-Forwarded-Proto https if https
