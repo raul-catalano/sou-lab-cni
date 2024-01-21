@@ -1,6 +1,8 @@
 global
+    # Add global settings here
 
 defaults
+    # Add default settings here
 
 resolvers docker_resolver
     nameserver dns 127.0.0.11:53
@@ -9,12 +11,18 @@ frontend sok-front-end1
     bind *:80
     bind :::443 ssl crt /haproxy/certs/localhost-comb.pem
     redirect scheme https code 301 if !{ ssl_fc }
+    redirect scheme https code 301 if !{ ssl_fc }
     acl https ssl_fc
-    http-request set-header X-Forwarded-Proto http  if !https
+    http-request set-header X-Forwarded-Proto http if !https
     http-request set-header X-Forwarded-Proto https if https
     mode http
+
     acl is_grafana hdr(host) -i grafana.local
     use_backend sok-front-end1 if is_grafana
+
+    acl deny_localhost hdr(host) -i localhost || hdr(host) -i 127.0.0.1
+    http-request deny if deny_localhost
+
     default_backend sok-front-end2
 
 backend sok-front-end1
@@ -26,12 +34,18 @@ frontend sok-front-end2
     bind *:80
     bind :::443 ssl crt /haproxy/certs/localhost-comb.pem
     redirect scheme https code 301 if !{ ssl_fc }
+    redirect scheme https code 301 if !{ ssl_fc }
     acl https ssl_fc
-    http-request set-header X-Forwarded-Proto http  if !https
+    http-request set-header X-Forwarded-Proto http if !https
     http-request set-header X-Forwarded-Proto https if https
     mode http
+
     acl is_prometheus hdr(host) -i prometheus.local
     use_backend sok-front-end2 if is_prometheus
+
+    acl deny_localhost hdr(host) -i localhost || hdr(host) -i 127.0.0.1
+    http-request deny if deny_localhost
+
     default_backend sok-front-end1
 
 backend sok-front-end2

@@ -2,7 +2,7 @@
 - hosts: localhost
   vars:
     ansible_python_interpreter: /usr/bin/python3
-  gather_facts: yes
+  gather_facts: no
   become: yes
   roles:
     - roles/sou_docker

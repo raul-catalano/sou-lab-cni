@@ -5,19 +5,13 @@ HaProxy will operate as reverse proxy and SSL termination for Prometheus and Gra
 
 ## Requirements
 
-- Docker Desktop
-- Ansible
+- [Doker Desktop](https://docs.docker.com/desktop/install/mac-install/)
 
 ## Installation
 
-``` sh
-ansible-galaxy collection install -r ./sou-lab-cni/roles/sou_docker/requirements.yml
-ansible-playbook -b -K ./sou-lab-cni/playbook.yml
-```
+    make
 
-## Post-Installation
+## Access URLs
 
-``` sh
-sudo sh -c 'echo "127.0.0.1 grafana.local" >> /etc/hosts'
-sudo sh -c 'echo "127.0.0.1 prometheus.local" >> /etc/hosts'
-```
+- Grafana: [grafana.local](http://grafana.local)
+- Prometheus: [prometheus.local](http://prometheus.local)

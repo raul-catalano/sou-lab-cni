@@ -7,7 +7,7 @@ HaProxy will operate as SSL termination and reverse proxy for Prometheus and Gra
 License
 -------
 
-BSD
+GPL-3.0
 
 Author Information
 ------------------

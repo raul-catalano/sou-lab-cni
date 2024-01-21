@@ -58,3 +58,15 @@
     ports:
       - "80:80"
       - "443:443"
+
+- name: Append entry for Grafana
+  lineinfile:
+    dest: /etc/hosts
+    line: "127.0.0.1 grafana.local"
+    insertafter: EOF
+
+- name: Append entry for Prometheus
+  lineinfile:
+    dest: /etc/hosts
+    line: "127.0.0.1 prometheus.local"
+    insertafter: EOF
